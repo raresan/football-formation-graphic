@@ -1,0 +1,54 @@
+@font-face {
+  font-family: 'SerieAWomen';
+  src: url('assets/fonts/SerieAWomenFont-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SerieAWomen';
+  src: url('assets/fonts/SerieAWomenFont-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SerieAWomenNumbers';
+  src: url('assets/fonts/SerieAWomenFontNumbers-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SerieAWomenNumbers';
+  src: url('assets/fonts/SerieAWomenFontNumbers-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SerieAWomenCompressed';
+  src: url('assets/fonts/SerieAWomenFont-Compressed.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RobotoFlex';
+  src: url('assets/fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf')
+    format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* GLOBAL */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'RobotoFlex', sans-serif;
+}
