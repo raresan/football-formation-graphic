@@ -16,66 +16,80 @@
         </p>
       </div>
       <section class="output">
-        <video class="output__video" muted autoplay>
+        <video class="output__video" muted playsinline preload="auto">
           <source src="assets/video/BG.mp4" type="video/mp4" />
         </video>
 
+        <div class="output__field">
+          <div class="output__player">
+            <span class="output__player-number" data-player="1">14</span>
+            <span class="output__player-name" data-player="1">Babb</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="2">5</span>
+            <span class="output__player-name" data-player="2">Koivisto</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="3">2</span>
+            <span class="output__player-name" data-player="3">Piga</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="4">45</span>
+            <span class="output__player-name" data-player="4">Sorelli</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="5">30</span>
+            <span class="output__player-name" data-player="5">Zanini</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="6">11</span>
+            <span class="output__player-name" data-player="6">Cernoia</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="7">6</span>
+            <span class="output__player-name" data-player="7">Cesarini</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="8">26</span>
+            <span class="output__player-name" data-player="8">Rubio Avila</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="9">8</span>
+            <span class="output__player-name" data-player="9">Vigilucci</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="10">10</span>
+            <span class="output__player-name" data-player="10">Ljeh</span>
+          </div>
+
+          <div class="output__player">
+            <span class="output__player-number" data-player="11">9</span>
+            <span class="output__player-name" data-player="11">Arrigoni</span>
+          </div>
+        </div>
+
         <button class="output__edit-btn">Edit ↓</button>
+      </section>
 
-        <div class="output__player">
-          <span class="output__player-number" data-player="1">14</span>
-          <span class="output__player-name" data-player="1">Babb</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="2">5</span>
-          <span class="output__player-name" data-player="2">Koivisto</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="3">2</span>
-          <span class="output__player-name" data-player="3">Piga</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="4">45</span>
-          <span class="output__player-name" data-player="4">Sorelli</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="5">30</span>
-          <span class="output__player-name" data-player="5">Zanini</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="6">11</span>
-          <span class="output__player-name" data-player="6">Cernoia</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="7">6</span>
-          <span class="output__player-name" data-player="7">Cesarini</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="8">26</span>
-          <span class="output__player-name" data-player="8">Rubio Avila</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="9">8</span>
-          <span class="output__player-name" data-player="9">Vigilucci</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="10">10</span>
-          <span class="output__player-name" data-player="10">Ljeh</span>
-        </div>
-
-        <div class="output__player">
-          <span class="output__player-number" data-player="11">9</span>
-          <span class="output__player-name" data-player="11">Arrigoni</span>
-        </div>
+      <section class="playback">
+        <button type="button" class="playback__btn" data-action="show">
+          Show
+        </button>
+        <button type="button" class="playback__btn" data-action="hide">
+          Hide
+        </button>
+        <button type="button" class="playback__btn" data-action="replay">
+          Replay
+        </button>
       </section>
 
       <section class="pitch">

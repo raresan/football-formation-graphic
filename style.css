@@ -55,27 +55,30 @@ body {
   color: white;
 }
 
-/* Main Output Container using Grid to stack rows vertically */
+/* Graphic sized by the video; players overlay that same box */
 .output {
   position: relative;
   width: 100%;
-  height: 100dvh;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.output__video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.output__field {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   display: grid;
   grid-template-rows: 0.5fr repeat(4, 1fr) 1fr;
   align-items: center;
   justify-items: center;
-  overflow: hidden;
-}
-
-/* Background video in full screen */
-.output__video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  z-index: 0;
+  line-height: normal;
+  padding-right: 7vw;
 }
 
 /* Row Wrapper (Flexbox for perfect horizontal distribution and centering) */
@@ -84,11 +87,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 3rem; /* Controls space between players in the same line */
-  z-index: 1;
+  gap: 5rem;
 }
 
-/* Vertical mapping of the rows inside the Grid */
+/* Perspective pitch: with 3+ players, the wings sit a little higher */
+.output__row:has(.output__player:nth-child(3)) .output__player:first-child,
+.output__row:has(.output__player:nth-child(3)) .output__player:last-child {
+  margin-top: -8rem;
+}
+
+/* Vertical mapping of the rows inside the overlay grid */
 .output__row[data-row='1'] {
   grid-row: 5; /* Defense */
 }
@@ -110,9 +118,29 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  transform: translateY(1.75rem);
+  pointer-events: none;
 
-  /* Smooth transition required by the challenge when switching formations */
-  transition: all 0.4s ease-in-out;
+  /* Entrance ~0.8s; hide uses 1s to match the 14–15s video exit */
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-top 0.4s ease-in-out;
+}
+
+.output.is-hiding .output__player {
+  transition-duration: 1s;
+}
+
+.output__player.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.output__player.is-instant {
+  transition: none;
 }
 
 /* Goalkeeper positioning (Player 1 - Fixed at the base) */
@@ -233,9 +261,9 @@ body {
 
 .pitch__formation-input {
   background: #0d0d0d;
-  border: 1px solid #2af4fc;
+  border: 1px solid #9a72cf;
   border-radius: 4px;
-  color: #2af4fc;
+  color: #9a72cf;
   font-size: 1.1rem;
   font-weight: 700;
   padding: 0.35rem 0.5rem;
@@ -263,15 +291,49 @@ body {
   display: block;
 }
 
+.playback {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1rem 0.25rem;
+  background: #111;
+}
+
+.playback__btn {
+  min-width: 7rem;
+  background: #0d0d0d;
+  border: 1px solid #9a72cf;
+  border-radius: 6px;
+  color: #9a72cf;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.playback__btn:hover {
+  background: #4d008d;
+}
+
+.playback__btn.is-active {
+  background: #9a72cf;
+  color: #111;
+}
+
 .output__edit-btn {
   position: absolute;
   bottom: 1.5rem;
   right: 1.5rem;
   z-index: 2;
-  background: #0d0d0dcc;
-  border: 1px solid #2af4fc;
+  background: #0d0d0d;
+  border: 1px solid #9a72cf;
   border-radius: 6px;
-  color: #2af4fc;
+  color: #9a72cf;
   font-size: 0.85rem;
   font-weight: 700;
   padding: 0.5rem 1rem;
@@ -281,7 +343,7 @@ body {
 }
 
 .output__edit-btn:hover {
-  background: #2af4fc22;
+  background: #4d008d;
 }
 
 .mobile-warning {

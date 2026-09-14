@@ -11,6 +11,9 @@ const inputFormation = document.querySelector('.pitch__formation-input')
 const errorFormation = document.querySelector('.pitch__formation-error')
 const editButton = document.querySelector('.output__edit-btn')
 const pitch = document.querySelector('.pitch')
+const outputVideo = document.querySelector('.output__video')
+const outputSection = document.querySelector('.output')
+const playbackButtons = document.querySelectorAll('.playback__btn')
 
 const onInput = (event, outputElement) => {
   const value = event.target.value
@@ -64,7 +67,7 @@ const validateFormation = (formationString) => {
 
 // Function to update formations and wrap outfield players into row containers dynamically
 const updatePlayerFormationAttributes = (formationArray) => {
-  const outputField = document.querySelector('.output')
+  const outputField = document.querySelector('.output__field')
 
   // Remove existing row wrappers if any, to rebuild them cleanly
   const existingRows = outputField.querySelectorAll('.output__row')
@@ -139,13 +142,238 @@ const updatePitchFormation = (formationArray) => {
   pitchSection.appendChild(formation)
 }
 
+// Video-synced animation: GK at 2s, next line every 2s, hold at 14s, exit 14–15s
+const ENTRANCE_START_S = 2
+const LINE_INTERVAL_S = 2
+const HOLD_AT_S = 14
+const EXIT_END_S = 15
+const EXIT_TEXT_DELAY_MS = 450
+
+let graphicState = 'hidden'
+let rafId = null
+let hideTextTimeoutId = null
+
+const getAnimationLines = () => {
+  const goalkeeper = document.querySelector(
+    '.output__player:has([data-player="1"])',
+  )
+  const rows = document.querySelectorAll('.output__row')
+  const lines = []
+
+  if (goalkeeper) {
+    lines.push([goalkeeper])
+  }
+
+  rows.forEach((row) => {
+    lines.push(Array.from(row.querySelectorAll('.output__player')))
+  })
+
+  return lines
+}
+
+const setPlayersVisible = (players, isVisible) => {
+  players.forEach((player) => {
+    player.classList.toggle('is-visible', isVisible)
+  })
+}
+
+const clearHideTextTimeout = () => {
+  if (hideTextTimeoutId !== null) {
+    clearTimeout(hideTextTimeoutId)
+    hideTextTimeoutId = null
+  }
+}
+
+const hidePlayersInstantly = () => {
+  clearHideTextTimeout()
+  outputSection.classList.remove('is-hiding')
+
+  document.querySelectorAll('.output__player').forEach((player) => {
+    player.classList.add('is-instant')
+    player.classList.remove('is-visible')
+  })
+
+  void outputSection.offsetWidth
+
+  document.querySelectorAll('.output__player').forEach((player) => {
+    player.classList.remove('is-instant')
+  })
+}
+
+const setActivePlaybackButton = (action) => {
+  playbackButtons.forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.action === action)
+  })
+}
+
+const stopSyncLoop = () => {
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId)
+    rafId = null
+  }
+}
+
+const revealLinesForTime = (currentTime) => {
+  getAnimationLines().forEach((players, lineIndex) => {
+    const lineStart = ENTRANCE_START_S + lineIndex * LINE_INTERVAL_S
+
+    if (currentTime >= lineStart) {
+      setPlayersVisible(players, true)
+    }
+  })
+}
+
+const syncShowToVideo = () => {
+  if (graphicState !== 'entering') {
+    rafId = null
+    return
+  }
+
+  const currentTime = outputVideo.currentTime
+  revealLinesForTime(currentTime)
+
+  if (currentTime >= HOLD_AT_S) {
+    outputVideo.pause()
+    outputVideo.currentTime = HOLD_AT_S
+    graphicState = 'visible'
+    rafId = null
+    return
+  }
+
+  rafId = requestAnimationFrame(syncShowToVideo)
+}
+
+const startShowSync = () => {
+  stopSyncLoop()
+  rafId = requestAnimationFrame(syncShowToVideo)
+}
+
+const finishHide = () => {
+  if (graphicState !== 'exiting') {
+    return
+  }
+
+  outputVideo.pause()
+  outputVideo.currentTime = EXIT_END_S
+  outputSection.classList.remove('is-hiding')
+  graphicState = 'hidden'
+}
+
+const showGraphic = () => {
+  if (graphicState === 'visible' || graphicState === 'entering') {
+    return
+  }
+
+  graphicState = 'entering'
+  setActivePlaybackButton('show')
+  hidePlayersInstantly()
+  outputVideo.currentTime = 0
+  outputVideo.play()
+  startShowSync()
+}
+
+const hideGraphic = () => {
+  if (graphicState === 'hidden' || graphicState === 'exiting') {
+    return
+  }
+
+  stopSyncLoop()
+  clearHideTextTimeout()
+  graphicState = 'exiting'
+  setActivePlaybackButton('hide')
+
+  outputVideo.currentTime = HOLD_AT_S
+  outputVideo.play()
+
+  hideTextTimeoutId = setTimeout(() => {
+    hideTextTimeoutId = null
+
+    if (graphicState !== 'exiting') {
+      return
+    }
+
+    outputSection.classList.add('is-hiding')
+    document.querySelectorAll('.output__player').forEach((player) => {
+      player.classList.remove('is-visible')
+    })
+  }, EXIT_TEXT_DELAY_MS)
+}
+
+const replayGraphic = () => {
+  stopSyncLoop()
+  graphicState = 'entering'
+  setActivePlaybackButton('show')
+  hidePlayersInstantly()
+  outputVideo.currentTime = 0
+  outputVideo.play()
+  startShowSync()
+}
+
 // Initialize default attributes on load for the default 4-4-2 formation
 updatePlayerFormationAttributes(currentValidFormation)
 updatePitchFormation(currentValidFormation)
 
+const startInitialShow = () => {
+  showGraphic()
+}
+
+if (outputVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+  startInitialShow()
+} else {
+  outputVideo.addEventListener('canplay', startInitialShow, { once: true })
+}
+
 // Events
 editButton.addEventListener('click', () => {
   pitch.scrollIntoView({ behavior: 'smooth' })
+})
+
+outputVideo.addEventListener('timeupdate', () => {
+  if (graphicState === 'entering') {
+    revealLinesForTime(outputVideo.currentTime)
+
+    if (outputVideo.currentTime >= HOLD_AT_S) {
+      outputVideo.pause()
+      outputVideo.currentTime = HOLD_AT_S
+      graphicState = 'visible'
+      stopSyncLoop()
+    }
+
+    return
+  }
+
+  if (
+    graphicState === 'exiting' &&
+    outputVideo.currentTime >= EXIT_END_S - 0.05
+  ) {
+    finishHide()
+  }
+})
+
+outputVideo.addEventListener('ended', () => {
+  if (graphicState === 'exiting') {
+    finishHide()
+  }
+})
+
+playbackButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const action = button.dataset.action
+
+    if (action === 'show') {
+      showGraphic()
+      return
+    }
+
+    if (action === 'hide') {
+      hideGraphic()
+      return
+    }
+
+    if (action === 'replay') {
+      replayGraphic()
+    }
+  })
 })
 
 inputPlayerNumbers.forEach((inputPlayerNumber, index) => {
@@ -172,6 +400,10 @@ inputFormation.addEventListener('input', (event) => {
 
     updatePlayerFormationAttributes(validation.lines)
     updatePitchFormation(validation.lines)
+
+    if (graphicState === 'visible' || graphicState === 'entering') {
+      revealLinesForTime(outputVideo.currentTime)
+    }
   } else {
     errorFormation.textContent = validation.message
     errorFormation.classList.add('pitch__formation-error--visible')
