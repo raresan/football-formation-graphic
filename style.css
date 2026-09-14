@@ -52,3 +52,12 @@
 body {
   font-family: 'RobotoFlex', sans-serif;
 }
+
+.pitch__formation-error {
+  display: none;
+  color: red;
+}
+
+.pitch__formation-error--visible {
+  display: block;
+}
