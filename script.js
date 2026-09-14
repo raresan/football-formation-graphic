@@ -4,6 +4,7 @@ const inputPlayerNumbers = document.querySelectorAll(
   '.pitch__player-number-input',
 )
 const inputPlayerNames = document.querySelectorAll('.pitch__player-name-input')
+const outputPlayers = document.querySelectorAll('.output__player')
 const outputPlayerNumbers = document.querySelectorAll('.output__player-number')
 const outputPlayerNames = document.querySelectorAll('.output__player-name')
 const inputFormation = document.querySelector('.pitch__formation-input')
@@ -73,22 +74,66 @@ const validateFormation = (formationString) => {
   return { isValid: true, lines: numbers }
 }
 
-// Event listener for the formation input
-inputFormation.addEventListener('change', (event) => {
+// Function to update formations and wrap outfield players into row containers dynamically
+const updatePlayerFormationAttributes = (formationArray) => {
+  const outputField = document.querySelector('.output')
+
+  // Remove existing row wrappers if any, to rebuild them cleanly
+  const existingRows = outputField.querySelectorAll('.output__row')
+  existingRows.forEach((row) => {
+    while (row.firstChild) {
+      outputField.insertBefore(row.firstChild, row)
+    }
+    row.remove()
+  })
+
+  // Filter out player 1 (goalkeeper) and get outfield players (2 to 11)
+  const outfieldPlayers = Array.from(outputPlayers).filter(
+    (player) =>
+      player.querySelector('[data-player]').getAttribute('data-player') !== '1',
+  )
+
+  let playerIndex = 0
+
+  // Loop through each row count in the formation array (e.g., 4, 3, 3)
+  formationArray.forEach((rowCount, rowIndex) => {
+    // Create a row wrapper div for horizontal flex distribution
+    const rowDiv = document.createElement('div')
+    rowDiv.classList.add('output__row')
+    rowDiv.setAttribute('data-row', rowIndex + 1)
+
+    // Append the exact number of players belonging to this row
+    for (let i = 0; i < rowCount; i++) {
+      const player = outfieldPlayers[playerIndex]
+      if (player) {
+        player.setAttribute('data-row', rowIndex + 1)
+        player.setAttribute('data-row-position', i + 1)
+        rowDiv.appendChild(player) // Moves the player inside the row wrapper
+      }
+      playerIndex++
+    }
+
+    // Insert the row wrapper into the output field container
+    outputField.appendChild(rowDiv)
+  })
+}
+
+// Initialize default attributes on load for the default 4-3-3 formation
+updatePlayerFormationAttributes(currentValidFormation)
+
+inputFormation.addEventListener('input', (event) => {
   const value = event.target.value.trim()
   const validation = validateFormation(value)
 
   if (validation.isValid) {
-    console.log('Valid formation!', validation.lines)
     currentValidFormation = validation.lines // Update global state
 
     errorFormation.textContent = ''
     errorFormation.classList.remove('pitch__formation-error--visible')
 
-    // TODO: Trigger function to redraw players on the field using 'currentValidFormation'
+    // Update the data attributes on the DOM elements without recreating them
+    updatePlayerFormationAttributes(validation.lines)
   } else {
-    console.warn('Validation warning:', validation.message)
-
     errorFormation.textContent = validation.message
     errorFormation.classList.add('pitch__formation-error--visible')
   }
