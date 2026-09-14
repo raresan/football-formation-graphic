@@ -51,32 +51,16 @@
 
 body {
   font-family: 'RobotoFlex', sans-serif;
-}
-
-body,
-html {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-main {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+  background: #111;
+  color: white;
 }
 
 /* Main Output Container using Grid to stack rows vertically */
 .output {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100dvh;
   display: grid;
-  /* 
-    Dividing the field vertically into rows:
-    - Top space, up to 4 tactical lines, and bottom space for the goalkeeper
-  */
   grid-template-rows: 0.5fr repeat(4, 1fr) 1fr;
   align-items: center;
   justify-items: center;
@@ -89,8 +73,8 @@ main {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   z-index: 0;
 }
 
@@ -100,7 +84,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6vw; /* Controls space between players in the same line */
+  gap: 3rem; /* Controls space between players in the same line */
   z-index: 1;
 }
 
@@ -126,7 +110,6 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
 
   /* Smooth transition required by the challenge when switching formations */
   transition: all 0.4s ease-in-out;
@@ -139,12 +122,184 @@ main {
   justify-self: center;
 }
 
-/* Formation error message styling */
+.output__player-number {
+  font-family: 'SerieAWomen';
+  font-size: 4rem;
+  font-weight: 700;
+  color: #2af4fc;
+  text-align: center;
+}
+
+.output__player-name {
+  font-family: 'SerieAWomen';
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Pitch controls panel */
+.pitch {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+  padding: 1rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.pitch__player {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.75rem;
+  background: #1a1a1a;
+  border: 1px solid #2af4fc33;
+  border-radius: 8px;
+  min-width: 180px;
+}
+
+.pitch__player:has([data-player='1']) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 220px;
+}
+
+.pitch__row {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.pitch__player-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #2af4fc;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.pitch__player-number,
+.pitch__player-name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pitch__player-number-input,
+.pitch__player-name-input {
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.5rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.pitch__player-number-input:focus,
+.pitch__player-name-input:focus {
+  border-color: #2af4fc;
+}
+
+.pitch__formation {
+  display: flex;
+  align-items: flex-end;
+  padding: 0.75rem;
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 220px;
+}
+
+.pitch__formation-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: 100%;
+}
+
+.pitch__formation-input {
+  background: #0d0d0d;
+  border: 1px solid #2af4fc;
+  border-radius: 4px;
+  color: #2af4fc;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 0.35rem 0.5rem;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+  width: 100%;
+}
+
+.pitch__formation-input:focus {
+  border-color: #fff;
+  color: #fff;
+}
+
 .pitch__formation-error {
   display: none;
-  color: red;
+  color: #ff4d4d;
+  font-size: 0.65rem;
+  word-break: break-word;
+  width: 100%;
 }
 
 .pitch__formation-error--visible {
   display: block;
+}
+
+.output__edit-btn {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 2;
+  background: #0d0d0dcc;
+  border: 1px solid #2af4fc;
+  border-radius: 6px;
+  color: #2af4fc;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: background 0.2s;
+}
+
+.output__edit-btn:hover {
+  background: #2af4fc22;
+}
+
+.mobile-warning {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #111;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #aaa;
+}
+
+@media (max-width: 768px) {
+  .mobile-warning {
+    display: flex;
+  }
 }

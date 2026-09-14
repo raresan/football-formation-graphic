@@ -9,6 +9,8 @@ const outputPlayerNumbers = document.querySelectorAll('.output__player-number')
 const outputPlayerNames = document.querySelectorAll('.output__player-name')
 const inputFormation = document.querySelector('.pitch__formation-input')
 const errorFormation = document.querySelector('.pitch__formation-error')
+const editButton = document.querySelector('.output__edit-btn')
+const pitch = document.querySelector('.pitch')
 
 const onInput = (event, outputElement) => {
   const value = event.target.value
@@ -16,22 +18,8 @@ const onInput = (event, outputElement) => {
   outputElement.textContent = value
 }
 
-// Number Events
-inputPlayerNumbers.forEach((inputPlayerNumber, index) => {
-  inputPlayerNumber.addEventListener('input', (event) => {
-    onInput(event, outputPlayerNumbers[index])
-  })
-})
-
-// Name Events
-inputPlayerNames.forEach((inputPlayerName, index) => {
-  inputPlayerName.addEventListener('input', (event) => {
-    onInput(event, outputPlayerNames[index])
-  })
-})
-
-// State to hold the last valid formation layout (defaults to 4-3-3)
-let currentValidFormation = [4, 3, 3]
+// State to hold the last valid formation layout (defaults to 4-4-2)
+let currentValidFormation = [4, 4, 2]
 
 const validateFormation = (formationString) => {
   // Regex to validate basic format: numbers separated by hyphens (e.g., 4-3-3, 4-2-3-1)
@@ -118,21 +106,72 @@ const updatePlayerFormationAttributes = (formationArray) => {
   })
 }
 
-// Initialize default attributes on load for the default 4-3-3 formation
+const updatePitchFormation = (formationArray) => {
+  const pitchSection = document.querySelector('.pitch')
+  const pitchPlayers = Array.from(document.querySelectorAll('.pitch__player'))
+  const goalkeeper = pitchPlayers.find(
+    (p) => p.querySelector('[data-player="1"]') !== null,
+  )
+  const outfieldCards = pitchPlayers.filter(
+    (p) => p.querySelector('[data-player="1"]') === null,
+  )
+  const formation = document.querySelector('.pitch__formation')
+
+  // Remove existing pitch rows
+  pitchSection.querySelectorAll('.pitch__row').forEach((row) => row.remove())
+
+  // Re-insert goalkeeper and formation (they stay outside rows)
+  pitchSection.innerHTML = ''
+  pitchSection.appendChild(goalkeeper)
+
+  let playerIndex = 0
+  formationArray.forEach((rowCount) => {
+    const rowDiv = document.createElement('div')
+    rowDiv.classList.add('pitch__row')
+    for (let i = 0; i < rowCount; i++) {
+      if (outfieldCards[playerIndex])
+        rowDiv.appendChild(outfieldCards[playerIndex])
+      playerIndex++
+    }
+    pitchSection.appendChild(rowDiv)
+  })
+
+  pitchSection.appendChild(formation)
+}
+
+// Initialize default attributes on load for the default 4-4-2 formation
 updatePlayerFormationAttributes(currentValidFormation)
+updatePitchFormation(currentValidFormation)
+
+// Events
+editButton.addEventListener('click', () => {
+  pitch.scrollIntoView({ behavior: 'smooth' })
+})
+
+inputPlayerNumbers.forEach((inputPlayerNumber, index) => {
+  inputPlayerNumber.addEventListener('input', (event) => {
+    onInput(event, outputPlayerNumbers[index])
+  })
+})
+
+inputPlayerNames.forEach((inputPlayerName, index) => {
+  inputPlayerName.addEventListener('input', (event) => {
+    onInput(event, outputPlayerNames[index])
+  })
+})
 
 inputFormation.addEventListener('input', (event) => {
   const value = event.target.value.trim()
   const validation = validateFormation(value)
 
   if (validation.isValid) {
-    currentValidFormation = validation.lines // Update global state
+    currentValidFormation = validation.lines
 
     errorFormation.textContent = ''
     errorFormation.classList.remove('pitch__formation-error--visible')
 
-    // Update the data attributes on the DOM elements without recreating them
     updatePlayerFormationAttributes(validation.lines)
+    updatePitchFormation(validation.lines)
   } else {
     errorFormation.textContent = validation.message
     errorFormation.classList.add('pitch__formation-error--visible')
