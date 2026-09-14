@@ -87,7 +87,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5rem;
+  gap: 4rem;
 }
 
 /* Perspective pitch: with 3+ players, the wings sit a little higher */
@@ -166,6 +166,11 @@ body {
   text-align: center;
 }
 
+.output__player-name.is-compressed {
+  font-family: 'SerieAWomenCompressed';
+  letter-spacing: 2px;
+}
+
 /* Pitch controls panel */
 .pitch {
   display: grid;
@@ -184,13 +189,17 @@ body {
   background: #1a1a1a;
   border: 1px solid #2af4fc33;
   border-radius: 8px;
-  min-width: 180px;
+  box-sizing: border-box;
+  width: 180px;
+  max-width: 180px;
+  min-width: 0;
 }
 
 .pitch__player:has([data-player='1']) {
   grid-column: 1 / -1;
   justify-self: center;
   width: 220px;
+  max-width: 220px;
 }
 
 .pitch__row {
@@ -219,6 +228,8 @@ body {
   color: #aaa;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .pitch__player-number-input,
@@ -237,6 +248,12 @@ body {
 .pitch__player-number-input:focus,
 .pitch__player-name-input:focus {
   border-color: #2af4fc;
+}
+
+.pitch__player-number-input::placeholder,
+.pitch__player-name-input::placeholder {
+  color: #666;
+  text-transform: none;
 }
 
 .pitch__formation {
@@ -283,8 +300,12 @@ body {
   display: none;
   color: #ff4d4d;
   font-size: 0.65rem;
-  word-break: break-word;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  text-transform: none;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .pitch__formation-error--visible {

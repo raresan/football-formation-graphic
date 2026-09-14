@@ -15,10 +15,79 @@ const outputVideo = document.querySelector('.output__video')
 const outputSection = document.querySelector('.output')
 const playbackButtons = document.querySelectorAll('.playback__btn')
 
-const onInput = (event, outputElement) => {
-  const value = event.target.value
+const EMPTY_NUMBER_OUTPUT = '[ ?? ]'
+const EMPTY_NAME_OUTPUT = '[ insert name ]'
+const NAME_MAX_LENGTH = 20
+const NAME_COMPRESSED_AFTER = 12
 
-  outputElement.textContent = value
+const getFieldError = (input) => {
+  const parent = input.parentElement
+  let error = parent.querySelector('.pitch__formation-error')
+
+  if (!error) {
+    error = document.createElement('span')
+    error.className = 'pitch__formation-error'
+    parent.appendChild(error)
+  }
+
+  return error
+}
+
+const setFieldError = (input, message) => {
+  const error = getFieldError(input)
+
+  error.textContent = message
+  error.classList.toggle('pitch__formation-error--visible', Boolean(message))
+}
+
+const syncPlayerNumber = (input, outputElement) => {
+  const cleaned = input.value.replace(/[^\d]/g, '').slice(0, 3)
+
+  if (input.value !== cleaned) {
+    input.value = cleaned
+  }
+
+  if (cleaned === '') {
+    outputElement.textContent = EMPTY_NUMBER_OUTPUT
+    setFieldError(input, 'Shirt number is required.')
+    return
+  }
+
+  const number = Number(cleaned)
+
+  if (number < 1 || number > 999) {
+    outputElement.textContent = EMPTY_NUMBER_OUTPUT
+    setFieldError(input, 'Shirt number must be between 1 and 999.')
+    return
+  }
+
+  outputElement.textContent = String(number)
+  setFieldError(input, '')
+}
+
+const syncPlayerName = (input, outputElement) => {
+  const value = input.value.slice(0, NAME_MAX_LENGTH)
+
+  if (input.value !== value) {
+    input.value = value
+  }
+
+  const trimmed = value.trim()
+
+  const displayName = trimmed === '' ? EMPTY_NAME_OUTPUT : value
+
+  outputElement.textContent = displayName
+  outputElement.classList.toggle(
+    'is-compressed',
+    displayName.length > NAME_COMPRESSED_AFTER,
+  )
+
+  if (trimmed === '') {
+    setFieldError(input, 'Name is required.')
+    return
+  }
+
+  setFieldError(input, '')
 }
 
 // State to hold the last valid formation layout (defaults to 4-4-2)
@@ -377,14 +446,24 @@ playbackButtons.forEach((button) => {
 })
 
 inputPlayerNumbers.forEach((inputPlayerNumber, index) => {
-  inputPlayerNumber.addEventListener('input', (event) => {
-    onInput(event, outputPlayerNumbers[index])
+  syncPlayerNumber(inputPlayerNumber, outputPlayerNumbers[index])
+
+  inputPlayerNumber.addEventListener('input', () => {
+    syncPlayerNumber(inputPlayerNumber, outputPlayerNumbers[index])
+  })
+
+  inputPlayerNumber.addEventListener('keydown', (event) => {
+    if (['e', 'E', '+', '-', '.'].includes(event.key)) {
+      event.preventDefault()
+    }
   })
 })
 
 inputPlayerNames.forEach((inputPlayerName, index) => {
-  inputPlayerName.addEventListener('input', (event) => {
-    onInput(event, outputPlayerNames[index])
+  syncPlayerName(inputPlayerName, outputPlayerNames[index])
+
+  inputPlayerName.addEventListener('input', () => {
+    syncPlayerName(inputPlayerName, outputPlayerNames[index])
   })
 })
 
