@@ -9,165 +9,336 @@
 
   <body>
     <main>
-      <section class="players">
-        <div class="player">
-          <span class="player__title">Player #1 (Goalkeeper)</span>
+      <section class="output">
+        <video class="output__video" muted autoplay>
+          <source src="assets/video/BG.mp4" type="video/mp4" />
+        </video>
 
-          <label class="player__number">
+        <div class="output__player">
+          <span class="output__player-number" data-player="1"></span>
+          <span class="output__player-name" data-player="1"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="2"></span>
+          <span class="output__player-name" data-player="2"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="3"></span>
+          <span class="output__player-name" data-player="3"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="4"></span>
+          <span class="output__player-name" data-player="4"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="5"></span>
+          <span class="output__player-name" data-player="5"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="6"></span>
+          <span class="output__player-name" data-player="6"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="7"></span>
+          <span class="output__player-name" data-player="7"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="8"></span>
+          <span class="output__player-name" data-player="8"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="9"></span>
+          <span class="output__player-name" data-player="9"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="10"></span>
+          <span class="output__player-name" data-player="10"></span>
+        </div>
+
+        <div class="output__player">
+          <span class="output__player-number" data-player="11"></span>
+          <span class="output__player-name" data-player="11"></span>
+        </div>
+      </section>
+
+      <section class="pitch">
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #1 (Goalkeeper)</span>
+
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="1"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="1"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #2</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #2</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="2"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="2"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #3</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #3</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="3"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="3"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #4</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #4</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="4"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="4"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #5</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #5</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="5"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="5"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #6</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #6</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="6"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="6"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #7</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #7</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="7"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="7"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #8</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #8</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="8"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="8"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #9</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #9</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="9"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="9"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #10</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #10</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="10"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="10"
+            />
           </label>
         </div>
 
-        <div class="player">
-          <span class="player__title">Player #11</span>
+        <div class="pitch__player">
+          <span class="pitch__player-title">Player #11</span>
 
-          <label class="player__number">
+          <label class="pitch__player-number">
             Shirt Number
-            <input type="number" min="1" max="999" class="player__input" />
+            <input
+              type="number"
+              min="1"
+              max="999"
+              class="pitch__player-number-input"
+              data-player="11"
+            />
           </label>
 
-          <label class="player__name">
+          <label class="pitch__player-name">
             Name
-            <input type="text" class="player__input" />
+            <input
+              type="text"
+              class="pitch__player-name-input"
+              data-player="11"
+            />
           </label>
         </div>
 
-        <div class="formation">
-          <label class="formation__title">
+        <div class="pitch__formation">
+          <label class="pitch__formation-title">
             Formation
-            <input type="text" class="formation__input" />
+            <input type="text" class="pitch__formation-input" />
           </label>
         </div>
       </section>
