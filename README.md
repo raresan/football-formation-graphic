@@ -8,7 +8,7 @@ The starting squad and default **4-4-2** follow the **reference video**.
 
 Desktop only. A full-screen message is shown under 768px.
 
-**Live site (Vercel):** [URL to be added]
+**Live site (Vercel):** https://football-formation-graphic.vercel.app/
 
 Or run it locally — open `index.html` in a browser, or serve the folder:
 

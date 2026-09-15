@@ -249,7 +249,7 @@ body {
 .output__controls {
   position: absolute;
   right: 1.5rem;
-  bottom: 1.5rem;
+  top: 1.5rem;
   z-index: 2;
   display: flex;
   flex-direction: column;
