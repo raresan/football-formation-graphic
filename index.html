@@ -77,19 +77,35 @@
           </div>
         </div>
 
-        <button class="output__edit-btn">Edit ↓</button>
-      </section>
+        <div class="output__controls">
+          <div class="playback__actions">
+            <button type="button" class="playback__btn" data-action="show">
+              Show
+            </button>
+            <button type="button" class="playback__btn" data-action="hide">
+              Hide
+            </button>
+            <button type="button" class="playback__btn" data-action="replay">
+              Replay
+            </button>
+          </div>
 
-      <section class="playback">
-        <button type="button" class="playback__btn" data-action="show">
-          Show
-        </button>
-        <button type="button" class="playback__btn" data-action="hide">
-          Hide
-        </button>
-        <button type="button" class="playback__btn" data-action="replay">
-          Replay
-        </button>
+          <div class="pitch__formation">
+            <label class="pitch__formation-title">
+              Formation
+              <input
+                type="text"
+                value="4-4-2"
+                inputmode="numeric"
+                autocomplete="off"
+                class="pitch__formation-input"
+              />
+              <span class="pitch__formation-error"></span>
+            </label>
+          </div>
+
+          <button type="button" class="output__edit-btn">Edit Players ↓</button>
+        </div>
       </section>
 
       <section class="pitch">
@@ -409,14 +425,6 @@
               class="pitch__player-name-input"
               data-player="11"
             />
-          </label>
-        </div>
-
-        <div class="pitch__formation">
-          <label class="pitch__formation-title">
-            Formation
-            <input type="text" value="4-4-2" class="pitch__formation-input" />
-            <span class="pitch__formation-error"></span>
           </label>
         </div>
       </section>

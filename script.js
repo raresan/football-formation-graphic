@@ -176,6 +176,96 @@ const updatePlayerFormationAttributes = (formationArray) => {
     // Insert the row wrapper into the output field container
     outputField.appendChild(rowDiv)
   })
+
+  // 4-2-3-1 etc. (GK + 4 outfield lines) need a tighter gap
+  const totalLinesIncludingGoalkeeper = formationArray.length + 1
+  outputField.classList.toggle('is-tight', totalLinesIncludingGoalkeeper >= 5)
+}
+
+// Flex/grid position changes do not interpolate. FLIP moves the same players.
+let formationMoveToken = 0
+
+const getOutputPlayerId = (player) =>
+  player.querySelector('[data-player]')?.getAttribute('data-player')
+
+const capturePlayerRects = () => {
+  const rects = new Map()
+
+  document.querySelectorAll('.output__player').forEach((player) => {
+    const id = getOutputPlayerId(player)
+
+    if (id) {
+      rects.set(id, player.getBoundingClientRect())
+    }
+  })
+
+  return rects
+}
+
+const playFormationFlip = (firstRects) => {
+  const token = ++formationMoveToken
+  const players = Array.from(
+    document.querySelectorAll('.output__player.is-visible'),
+  )
+
+  players.forEach((player) => {
+    cancelPlayerMoveAnimations(player)
+    player.classList.add('is-instant')
+    player.style.transform = ''
+  })
+
+  void outputSection.offsetWidth
+
+  players.forEach((player) => {
+    const first = firstRects.get(getOutputPlayerId(player))
+
+    if (!first) {
+      player.classList.remove('is-instant')
+      return
+    }
+
+    const last = player.getBoundingClientRect()
+    const dx = first.left - last.left
+    const dy = first.top - last.top
+
+    player.classList.remove('is-instant')
+
+    if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) {
+      return
+    }
+
+    const animation = player.animate(
+      [
+        { transform: `translate(${dx}px, ${dy}px)` },
+        { transform: 'translate(0px, 0px)' },
+      ],
+      {
+        duration: 900,
+        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        fill: 'none',
+      },
+    )
+
+    animation.addEventListener('finish', () => {
+      if (token !== formationMoveToken) {
+        return
+      }
+
+      player.style.transform = ''
+    })
+  })
+}
+
+const updateFormationLayout = (formationArray, shouldAnimate) => {
+  const firstRects = shouldAnimate ? capturePlayerRects() : null
+
+  updatePlayerFormationAttributes(formationArray)
+
+  if (!shouldAnimate || graphicState === 'hidden') {
+    return
+  }
+
+  playFormationFlip(firstRects)
 }
 
 const updatePitchFormation = (formationArray) => {
@@ -187,12 +277,9 @@ const updatePitchFormation = (formationArray) => {
   const outfieldCards = pitchPlayers.filter(
     (p) => p.querySelector('[data-player="1"]') === null,
   )
-  const formation = document.querySelector('.pitch__formation')
-
   // Remove existing pitch rows
   pitchSection.querySelectorAll('.pitch__row').forEach((row) => row.remove())
 
-  // Re-insert goalkeeper and formation (they stay outside rows)
   pitchSection.innerHTML = ''
   pitchSection.appendChild(goalkeeper)
 
@@ -207,8 +294,6 @@ const updatePitchFormation = (formationArray) => {
     }
     pitchSection.appendChild(rowDiv)
   })
-
-  pitchSection.appendChild(formation)
 }
 
 // Video-synced animation: GK at 2s, next line every 2s, hold at 14s, exit 14–15s
@@ -253,11 +338,16 @@ const clearHideTextTimeout = () => {
   }
 }
 
+const cancelPlayerMoveAnimations = (player) => {
+  player.getAnimations().forEach((animation) => animation.cancel())
+}
+
 const hidePlayersInstantly = () => {
   clearHideTextTimeout()
   outputSection.classList.remove('is-hiding')
 
   document.querySelectorAll('.output__player').forEach((player) => {
+    cancelPlayerMoveAnimations(player)
     player.classList.add('is-instant')
     player.classList.remove('is-visible')
   })
@@ -363,6 +453,7 @@ const hideGraphic = () => {
 
     outputSection.classList.add('is-hiding')
     document.querySelectorAll('.output__player').forEach((player) => {
+      cancelPlayerMoveAnimations(player)
       player.classList.remove('is-visible')
     })
   }, EXIT_TEXT_DELAY_MS)
@@ -467,8 +558,15 @@ inputPlayerNames.forEach((inputPlayerName, index) => {
   })
 })
 
+const maskFormationValue = (raw) => {
+  const digits = raw.replace(/\D/g, '').slice(0, 10)
+
+  return digits.split('').join('-')
+}
+
 inputFormation.addEventListener('input', (event) => {
-  const value = event.target.value.trim()
+  const value = maskFormationValue(event.target.value)
+  event.target.value = value
   const validation = validateFormation(value)
 
   if (validation.isValid) {
@@ -477,7 +575,7 @@ inputFormation.addEventListener('input', (event) => {
     errorFormation.textContent = ''
     errorFormation.classList.remove('pitch__formation-error--visible')
 
-    updatePlayerFormationAttributes(validation.lines)
+    updateFormationLayout(validation.lines, true)
     updatePitchFormation(validation.lines)
 
     if (graphicState === 'visible' || graphicState === 'entering') {
